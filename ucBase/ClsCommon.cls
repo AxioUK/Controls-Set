@@ -67,6 +67,13 @@ Public Enum CheckPos
     cBottom
 End Enum
 
+Public Enum HotLinePos
+    hlLeft
+    hlTop
+    hlRight
+    hlBottom
+End Enum
+
 Public Enum LineOr
   loVertical
   loHorizontal
@@ -103,4 +110,37 @@ End Enum
 Public Enum ButtonResult
   vrOK
   vrCancel
+End Enum
+
+Public Enum eButtonEffect
+  bFlatEffect
+  bPressEffect
+End Enum
+
+Public Enum eFlatEffect
+  pInvertGradient
+  pChangeColor
+End Enum
+
+Public Enum ePressEffect
+  pSlanted
+  pDownStraight
+End Enum
+
+Public Enum CallOutPosition
+  coLeft
+  coTop
+  coRight
+  coBottom
+End Enum
+
+Public Enum DTAlign
+  DT_LEFT = &H0
+  DT_CENTER = &H1
+  DT_RIGHT = &H2
+End Enum
+
+Public Enum StyleDraw
+  stDrawing
+  stIconFont
 End Enum

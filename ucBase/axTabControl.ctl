@@ -177,7 +177,7 @@ Dim mUserControlHdc As Long
 Private Declare Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (Destination As Any, Source As Any, ByVal Length As Long)
 Private Declare Function VirtualAlloc Lib "kernel32" (ByVal lpAddress As Long, ByVal dwSize As Long, ByVal flAllocationType As Long, ByVal flProtect As Long) As Long
 Private Declare Function CryptStringToBinary Lib "crypt32" Alias "CryptStringToBinaryA" (ByVal pszString As String, ByVal cchString As Long, ByVal dwFlags As Long, ByVal pbBinary As Long, pcbBinary As Long, Optional ByVal pdwSkip As Long, Optional ByVal pdwFlags As Long) As Long
-Private Declare Function CallWindowProc Lib "user32" Alias "CallWindowProcA" (ByVal lpPrevWndFunc As Long, ByVal hWnd As Long, ByVal Msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Private Declare Function CallWindowProc Lib "user32" Alias "CallWindowProcA" (ByVal lpPrevWndFunc As Long, ByVal hWnd As Long, ByVal MSG As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
 Private Declare Function GetModuleHandle Lib "kernel32" Alias "GetModuleHandleA" (ByVal lpModuleName As String) As Long
 Private Declare Function GetProcAddress Lib "kernel32" (ByVal hModule As Long, ByVal lpProcName As String) As Long
 Private Declare Function GetProcAddressByOrdinal Lib "kernel32" Alias "GetProcAddress" (ByVal hModule As Long, ByVal lpProcOrdinal As Long) As Long
@@ -192,7 +192,7 @@ Private Declare Function CreateCompatibleBitmap Lib "gdi32" (ByVal hDC As Long, 
 Private Declare Function BitBlt Lib "gdi32" (ByVal hDestDC As Long, ByVal X As Long, ByVal Y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal hSrcDC As Long, ByVal xSrc As Long, ByVal ySrc As Long, ByVal dwRop As Long) As Long
 'Private Declare Function SetStretchBltMode Lib "gdi32" (ByVal hdc As Long, ByVal nStretchMode As Long) As Long
 Private Declare Function StretchBlt Lib "gdi32" (ByVal hDC As Long, ByVal X As Long, ByVal Y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal hSrcDC As Long, ByVal xSrc As Long, ByVal ySrc As Long, ByVal nSrcWidth As Long, ByVal nSrcHeight As Long, ByVal dwRop As Long) As Long
-Private Declare Function Rectangle Lib "gdi32" (ByVal hDC As Long, ByVal X1 As Long, ByVal Y1 As Long, ByVal X2 As Long, ByVal Y2 As Long) As Long
+Private Declare Function Rectangle Lib "gdi32" (ByVal hDC As Long, ByVal X1 As Long, ByVal y1 As Long, ByVal x2 As Long, ByVal y2 As Long) As Long
 Private Declare Function CreateSolidBrush Lib "gdi32" (ByVal crColor As Long) As Long
 Private Declare Function CreatePen Lib "gdi32" (ByVal nPenStyle As Long, ByVal nWidth As Long, ByVal crColor As Long) As Long
 Private Declare Function GetStockObject Lib "gdi32" (ByVal nIndex As Long) As Long
@@ -225,14 +225,14 @@ Private Declare Function GetDeviceCaps Lib "gdi32" (ByVal hDC As Long, ByVal nIn
 Private Declare Function ReleaseDC Lib "user32.dll" (ByVal hWnd As Long, ByVal hDC As Long) As Long
 Private Declare Function GetSysColor Lib "user32.dll" (ByVal nIndex As Long) As Long
 '
-Private Declare Function GdiplusStartup Lib "GdiPlus.dll" (Token As Long, inputbuf As GDIPlusStartupInput, Optional ByVal outputbuf As Long = 0) As Long
-Private Declare Sub GdiplusShutdown Lib "GdiPlus.dll" (ByVal Token As Long)
+Private Declare Function GdiplusStartup Lib "GdiPlus.dll" (token As Long, inputbuf As GDIPlusStartupInput, Optional ByVal outputbuf As Long = 0) As Long
+Private Declare Sub GdiplusShutdown Lib "GdiPlus.dll" (ByVal token As Long)
 Private Declare Function GdipCreateLineBrushFromRectWithAngleI Lib "GdiPlus.dll" (ByRef mRect As RECTL, ByVal mColor1 As Long, ByVal mColor2 As Long, ByVal mAngle As Single, ByVal mIsAngleScalable As Long, ByVal mWrapMode As Long, ByRef mLineGradient As Long) As Long
-Private Declare Function GdipDrawRectangleI Lib "GdiPlus.dll" (ByVal graphics As Long, ByVal pen As Long, ByVal X As Long, ByVal Y As Long, ByVal nWidth As Long, ByVal nHeight As Long) As Long
+Private Declare Function GdipDrawRectangleI Lib "GdiPlus.dll" (ByVal Graphics As Long, ByVal pen As Long, ByVal X As Long, ByVal Y As Long, ByVal nWidth As Long, ByVal nHeight As Long) As Long
 Private Declare Function GdipCreateFromHDC Lib "GdiPlus.dll" (ByVal mhDC As Long, ByRef mGraphics As Long) As Long
 Private Declare Function GdipCreatePen1 Lib "GdiPlus.dll" (ByVal mColor As Long, ByVal mWidth As Single, ByVal mUnit As Long, ByRef mPen As Long) As Long
 Private Declare Function GdipDeleteGraphics Lib "GdiPlus.dll" (ByVal mGraphics As Long) As Long
-Private Declare Function GdipDeleteBrush Lib "GdiPlus.dll" (ByVal Brush As Long) As Long
+Private Declare Function GdipDeleteBrush Lib "GdiPlus.dll" (ByVal brush As Long) As Long
 Private Declare Function GdipDeletePen Lib "GdiPlus.dll" (ByVal mPen As Long) As Long
 Private Declare Function GdipCreatePath Lib "GdiPlus.dll" (ByRef mBrushMode As Long, ByRef mPath As Long) As Long
 Private Declare Function GdipAddPathLineI Lib "GdiPlus.dll" (ByVal mPath As Long, ByVal mX1 As Long, ByVal mY1 As Long, ByVal mX2 As Long, ByVal mY2 As Long) As Long
@@ -241,8 +241,8 @@ Private Declare Function GdipClosePathFigures Lib "GdiPlus.dll" (ByVal mPath As 
 Private Declare Function GdipDeletePath Lib "GdiPlus.dll" (ByVal mPath As Long) As Long
 Private Declare Function GdipDrawPath Lib "GdiPlus.dll" (ByVal mGraphics As Long, ByVal mPen As Long, ByVal mPath As Long) As Long
 Private Declare Function GdipFillPath Lib "GdiPlus.dll" (ByVal mGraphics As Long, ByVal mBrush As Long, ByVal mPath As Long) As Long
-Private Declare Function GdipSetSmoothingMode Lib "GdiPlus.dll" (ByVal graphics As Long, ByVal SmoothingMd As Long) As Long
-Private Declare Function GdipCreateSolidFill Lib "gdiplus" (ByVal ARGB As Long, ByRef Brush As Long) As Long
+Private Declare Function GdipSetSmoothingMode Lib "GdiPlus.dll" (ByVal Graphics As Long, ByVal SmoothingMd As Long) As Long
+Private Declare Function GdipCreateSolidFill Lib "gdiplus" (ByVal ARGB As Long, ByRef brush As Long) As Long
 'Private Declare Function GdipMeasureString Lib "GdiPlus.dll" (ByVal mGraphics As Long, ByVal mString As Long, ByVal mLength As Long, ByVal mFont As Long, ByRef mLayoutRect As RECTS, ByVal mStringFormat As Long, ByRef mBoundingBox As RECTS, ByRef mCodepointsFitted As Long, ByRef mLinesFilled As Long) As Long
 'Private Declare Function GdipCreateFont Lib "GdiPlus.dll" (ByVal mFontFamily As Long, ByVal mEmSize As Single, ByVal mStyle As Long, ByVal mUnit As Long, ByRef mFont As Long) As Long
 'Private Declare Function GdipDeleteFont Lib "GdiPlus.dll" (ByVal mFont As Long) As Long
@@ -258,16 +258,16 @@ Private Declare Function GdipSetPenMode Lib "GdiPlus.dll" (ByVal mPen As Long, B
 'Private Declare Function GdipSetStringFormatTrimming Lib "GdiPlus.dll" (ByVal mFormat As Long, ByVal mTrimming As eStringTrimming) As Long
 'Private Declare Function GdipSetStringFormatAlign Lib "gdiplus" (ByVal StringFormat As Long, ByVal Align As eStringAlignment) As Long
 'Private Declare Function GdipSetStringFormatLineAlign Lib "GdiPlus.dll" (ByVal mFormat As Long, ByVal mAlign As eStringAlignment) As Long
-Private Declare Function GdipTranslateWorldTransform Lib "gdiplus" (ByVal graphics As Long, ByVal dX As Single, ByVal dY As Single, ByVal Order As Long) As Long
-Private Declare Function GdipRotateWorldTransform Lib "gdiplus" (ByVal graphics As Long, ByVal Angle As Single, ByVal Order As Long) As Long
+Private Declare Function GdipTranslateWorldTransform Lib "gdiplus" (ByVal Graphics As Long, ByVal dX As Single, ByVal dY As Single, ByVal Order As Long) As Long
+Private Declare Function GdipRotateWorldTransform Lib "gdiplus" (ByVal Graphics As Long, ByVal Angle As Single, ByVal Order As Long) As Long
 Private Declare Function GdipResetWorldTransform Lib "GdiPlus.dll" (ByVal mGraphics As Long) As Long
 Private Declare Function GdipDeleteStringFormat Lib "GdiPlus.dll" (ByVal mFormat As Long) As Long
 Private Declare Function GdipSetClipRectI Lib "GdiPlus.dll" (ByVal mGraphics As Long, ByVal mX As Long, ByVal mY As Long, ByVal mWidth As Long, ByVal mHeight As Long, ByVal mCombineMode As Long) As Long
 Private Declare Function GdipResetClip Lib "GdiPlus.dll" (ByVal mGraphics As Long) As Long
 Private Declare Function GdipResetPath Lib "GdiPlus.dll" (ByVal mPath As Long) As Long
 Private Declare Function GdipDrawLineI Lib "GdiPlus.dll" (ByVal mGraphics As Long, ByVal mPen As Long, ByVal mX1 As Long, ByVal mY1 As Long, ByVal mX2 As Long, ByVal mY2 As Long) As Long
-Private Declare Function GdipDrawPolygonI Lib "gdiplus" (ByVal graphics As Long, ByVal pen As Long, ByRef pPoints As Any, ByVal count As Long) As Long
-Private Declare Function GdipFillPolygonI Lib "gdiplus" (ByVal graphics As Long, ByVal Brush As Long, ByRef pPoints As Any, ByVal count As Long, ByVal FillMode As Long) As Long
+Private Declare Function GdipDrawPolygonI Lib "gdiplus" (ByVal Graphics As Long, ByVal pen As Long, ByRef pPoints As Any, ByVal count As Long) As Long
+Private Declare Function GdipFillPolygonI Lib "gdiplus" (ByVal Graphics As Long, ByVal brush As Long, ByRef pPoints As Any, ByVal count As Long, ByVal FillMode As Long) As Long
 
 Private Type GDIPlusStartupInput
     GdiPlusVersion           As Long
@@ -302,12 +302,12 @@ End Type
 '  rRight
 'End Enum
 
-Public Enum HLPosition
-    hlLeft
-    hlTop
-    hlRight
-    hlBottom
-End Enum
+'Public Enum HLPosition
+'    hlLeft
+'    hlTop
+'    hlRight
+'    hlBottom
+'End Enum
 
 Private Const SmoothingModeAntiAlias As Long = 4
 Private Const WrapModeTileFlipXY = &H3
@@ -617,7 +617,7 @@ Sub Draw()
 Dim hFont As Long, hFontOld As Long
 Dim hBrush As Long, hBrushOld As Long
 Dim hPen As Long, hPenOld As Long
-Dim I As Long, c As Long, X As Long
+Dim i As Long, c As Long, X As Long
 Dim rcCalc As RECT, rc As RECT, lWidth As Long, lHeight As Long
 Dim W As Long, H As Long, OldTextColor As Long
 
@@ -635,8 +635,8 @@ Dim W As Long, H As Long, OldTextColor As Long
      
   X = 4 + -lScrollX
   
-For I = 0 To m_TabCount - 1
-        c = m_TabOrder(I)
+For i = 0 To m_TabCount - 1
+        c = m_TabOrder(i)
     With m_Tabs(c)
         If .Visible = True Then
               rcCalc.Left = 0
@@ -656,11 +656,11 @@ For I = 0 To m_TabCount - 1
     End With
 Next
 
-  Dim b As Boolean
-  b = bSliderShown
+  Dim B As Boolean
+  B = bSliderShown
   bSliderShown = X + lScrollX + 32 >= lWidth
   lScrollWidth = ((X + lScrollX) - lWidth) + 48 '50
-      If b = False And bSliderShown = True Then
+      If B = False And bSliderShown = True Then
           RightSliderStatus = ssNormal
       End If
   If lScrollWidth < 0 Then
@@ -676,8 +676,8 @@ uRct.Height = lHeight - 26
 
 fRoundRect hGraphics, uRct, AColor(m_BackColor1, 100), AColor(m_BackColor2, 100), m_Angle, 1, AColor(m_BorderColor, 100), 5
 
-For I = m_TabCount - 1 To 0 Step -1
-        c = m_TabOrder(I)
+For i = m_TabCount - 1 To 0 Step -1
+        c = m_TabOrder(i)
    If c <> selIndex Then
         With m_Tabs(c)
             If .Left > -.Width And .Right < lWidth + .Width Then
@@ -949,22 +949,22 @@ Private Sub AddTabControls(ByVal lIndex As Long, ByVal ctlName As String)
 End Sub
 
 '*2
-Private Sub DrawTab(ByVal hGraphics As Long, ByVal I As Long)
+Private Sub DrawTab(ByVal hGraphics As Long, ByVal i As Long)
 Dim OldTextColor As Long
 Dim rc As RECT, tRct As RECTL
 
 Dim ColX As Long, ColY As Long
 
-If I > -1 And I < m_TabCount And m_TabCount > 0 Then
-    With m_Tabs(I)
+If i > -1 And i < m_TabCount And m_TabCount > 0 Then
+    With m_Tabs(i)
         rc.Left = .Left:     rc.Top = .Top
         rc.Right = IIf(m_TabWidth = 0, .Right, .Left + m_TabWidth - 10)
         rc.Bottom = .Bottom
 
         tRct.Left = .Left:    tRct.Top = .Top
-        tRct.Width = .Width:  tRct.Height = IIf(selIndex = I, .Height, .Height - 4)
+        tRct.Width = .Width:  tRct.Height = IIf(selIndex = i, .Height, .Height - 4)
         
-        If selIndex = I Then
+        If selIndex = i Then
             SetTextColor mhDC, m_ForeColorActive
             fRoundCut hGraphics, tRct, AColor(m_BackColor1, 100), AColor(m_ColorActive, 100), 0, 2, AColor(m_BorderColor, 100), 6, rBottom
             DrawLine hGraphics, rc.Left, rc.Bottom - 2, rc.Right + 10, rc.Bottom - 2, m_ColorActive, 90, 5
@@ -981,7 +981,7 @@ If I > -1 And I < m_TabCount And m_TabCount > 0 Then
             SetTextColor mhDC, OldTextColor
         End If
             
-        If selIndex = I Then
+        If selIndex = i Then
             If bInFocus = True Then
                 DrawText mhDC, .sCaption, Len(.sCaption), rc, DT_CENTER Or DT_VCENTER '.Alignment
                 rc.Left = rc.Left
@@ -1039,7 +1039,7 @@ Dim c As Long
 End Function
  
 Private Sub handleControls(ByVal LastIndex As Long, ByVal nIndex As Long)
-Dim I As Long, z As Long, mCTL As Control, ctlName As String
+Dim i As Long, z As Long, mCTL As Control, ctlName As String
 If m_TabCount > 0 Then
     LastIndex = getTabOrder(LastIndex)
     nIndex = getTabOrder(nIndex)
@@ -1081,10 +1081,10 @@ End Sub
 
 '*1
 Private Function HitTest(ByVal lX As Long, ByVal lY As Long) As Long
-Dim I As Long, c As Long, rc As RECT, lTab As Long
+Dim i As Long, c As Long, rc As RECT, lTab As Long
         lTab = -1
-    For I = 0 To m_TabCount - 1
-            c = m_TabOrder(I)
+    For i = 0 To m_TabCount - 1
+            c = m_TabOrder(i)
         With m_Tabs(c)
             If .Enabled = True And .Visible = True Then
                     rc.Left = .Left
@@ -1092,7 +1092,7 @@ Dim I As Long, c As Long, rc As RECT, lTab As Long
                     rc.Right = IIf(m_TabWidth = 0, .Right + 10, .Left + m_TabWidth - 10) '.Right
                     rc.Bottom = .Bottom
                 If lX >= rc.Left And lX <= rc.Right And lY >= rc.Top And lY <= rc.Bottom Then
-                    lTab = I ' C
+                    lTab = i ' C
                     Exit For
                 End If
             End If
@@ -1595,40 +1595,40 @@ Private Sub UserControl_ReadProperties(PropBag As PropertyBag)
         m_ctlCount = 0
     ReDim m_Ctls(m_ctlCount)
         
-    Dim I As Long, z As Long
+    Dim i As Long, z As Long
     Dim mCCount As Long, ctlName As String, ItemMax As Long
-    For I = 0 To m_TabCount - 1
-        m_TabOrder(I) = PropBag.ReadProperty("TabOrder" & I, I)
-        m_Tabs(I).Image = PropBag.ReadProperty("TabIcon" & I, 0)
-        m_Tabs(I).Enabled = PropBag.ReadProperty("TabEnabled" & I, True)
-        m_Tabs(I).sKey = PropBag.ReadProperty("Key" & I, "")
-        m_Tabs(I).sTag = PropBag.ReadProperty("TabTag" & I, "")
-        m_Tabs(I).Visible = PropBag.ReadProperty("TabVisible" & I, True)
+    For i = 0 To m_TabCount - 1
+        m_TabOrder(i) = PropBag.ReadProperty("TabOrder" & i, i)
+        m_Tabs(i).Image = PropBag.ReadProperty("TabIcon" & i, 0)
+        m_Tabs(i).Enabled = PropBag.ReadProperty("TabEnabled" & i, True)
+        m_Tabs(i).sKey = PropBag.ReadProperty("Key" & i, "")
+        m_Tabs(i).sTag = PropBag.ReadProperty("TabTag" & i, "")
+        m_Tabs(i).Visible = PropBag.ReadProperty("TabVisible" & i, True)
         
-        m_Tabs(I).sCaption = PropBag.ReadProperty("Item(" & I & ").Caption", "Tab " & I + 1)
-        mCCount = PropBag.ReadProperty("Item(" & I & ").ControlCount", 0)
+        m_Tabs(i).sCaption = PropBag.ReadProperty("Item(" & i & ").Caption", "Tab " & i + 1)
+        mCCount = PropBag.ReadProperty("Item(" & i & ").ControlCount", 0)
                 
         For z = 0 To mCCount - 1
-                ctlName = PropBag.ReadProperty("Item(" & I & ").Control(" & z & ")", "")
+                ctlName = PropBag.ReadProperty("Item(" & i & ").Control(" & z & ")", "")
             If ctlName <> "" Then
                 ReDim Preserve m_Ctls(m_ctlCount)
                    m_Ctls(m_ctlCount).ctlName = ctlName
-                   m_Ctls(m_ctlCount).iTabIndex = I
+                   m_Ctls(m_ctlCount).iTabIndex = i
                 m_ctlCount = m_ctlCount + 1
             End If
         Next z
         
-    Next I
+    Next i
         
         ItemMax = PropBag.ReadProperty("ItemMax", 0)
-    For I = m_TabCount To ItemMax
-        mCCount = PropBag.ReadProperty("Item(" & I & ").ControlCount", 0)
+    For i = m_TabCount To ItemMax
+        mCCount = PropBag.ReadProperty("Item(" & i & ").ControlCount", 0)
         For z = 0 To mCCount - 1
-                ctlName = PropBag.ReadProperty("Item(" & I & ").Control(" & z & ")", "")
+                ctlName = PropBag.ReadProperty("Item(" & i & ").Control(" & z & ")", "")
             If ctlName <> "" Then
                 ReDim Preserve m_Ctls(m_ctlCount)
                    m_Ctls(m_ctlCount).ctlName = ctlName
-                   m_Ctls(m_ctlCount).iTabIndex = I
+                   m_Ctls(m_ctlCount).iTabIndex = i
                 m_ctlCount = m_ctlCount + 1
             End If
         Next z
@@ -1656,10 +1656,8 @@ Private Sub UserControl_ReadProperties(PropBag As PropertyBag)
   m_Angle = PropBag.ReadProperty("AngleGradient", 45)
   m_Enabled = PropBag.ReadProperty("Enabled", True)
   
-  UserControl.Enabled = m_Enabled
-  
-    pvSubclass
-    Refresh
+  pvSubclass
+  Refresh
 
 End Sub
 
@@ -1687,38 +1685,38 @@ Private Sub UserControl_WriteProperties(PropBag As PropertyBag)
     
     PropBag.WriteProperty "ItemCount", m_TabCount, 4
     
-    Dim I As Long, z As Long, c As Long, MaxIndex As Long
-    For I = 0 To m_TabCount - 1
-        PropBag.WriteProperty "TabOrder" & I, m_TabOrder(I), I
-        PropBag.WriteProperty "TabIcon" & I, m_Tabs(I).Image, 0
-        PropBag.WriteProperty "TabEnabled" & I, m_Tabs(I).Enabled, True
-        PropBag.WriteProperty "TabTag" & I, m_Tabs(I).sTag, ""
-        PropBag.WriteProperty "TabKey" & I, m_Tabs(I).sKey, ""
-        PropBag.WriteProperty "TabVisible" & I, m_Tabs(I).Visible, True
+    Dim i As Long, z As Long, c As Long, MaxIndex As Long
+    For i = 0 To m_TabCount - 1
+        PropBag.WriteProperty "TabOrder" & i, m_TabOrder(i), i
+        PropBag.WriteProperty "TabIcon" & i, m_Tabs(i).Image, 0
+        PropBag.WriteProperty "TabEnabled" & i, m_Tabs(i).Enabled, True
+        PropBag.WriteProperty "TabTag" & i, m_Tabs(i).sTag, ""
+        PropBag.WriteProperty "TabKey" & i, m_Tabs(i).sKey, ""
+        PropBag.WriteProperty "TabVisible" & i, m_Tabs(i).Visible, True
 
-        PropBag.WriteProperty "Item(" & I & ").Caption", m_Tabs(I).sCaption, "Tab " & I + 1
+        PropBag.WriteProperty "Item(" & i & ").Caption", m_Tabs(i).sCaption, "Tab " & i + 1
         c = 0
         For z = 0 To m_ctlCount - 1
-            If m_Ctls(z).iTabIndex = I Then
-                PropBag.WriteProperty "Item(" & I & ").Control(" & c & ")", m_Ctls(z).ctlName, ""
+            If m_Ctls(z).iTabIndex = i Then
+                PropBag.WriteProperty "Item(" & i & ").Control(" & c & ")", m_Ctls(z).ctlName, ""
                 c = c + 1
             End If
             If MaxIndex < m_Ctls(z).iTabIndex Then
                 MaxIndex = m_Ctls(z).iTabIndex
             End If
         Next z
-        PropBag.WriteProperty "Item(" & I & ").ControlCount", c, 0
-    Next I
+        PropBag.WriteProperty "Item(" & i & ").ControlCount", c, 0
+    Next i
         PropBag.WriteProperty "ItemMax", MaxIndex, 0
-    For I = m_TabCount To MaxIndex
+    For i = m_TabCount To MaxIndex
             c = 0
         For z = 0 To m_ctlCount - 1
-            If m_Ctls(z).iTabIndex = I Then
-                PropBag.WriteProperty "Item(" & I & ").Control(" & c & ")", m_Ctls(z).ctlName, ""
+            If m_Ctls(z).iTabIndex = i Then
+                PropBag.WriteProperty "Item(" & i & ").Control(" & c & ")", m_Ctls(z).ctlName, ""
                 c = c + 1
             End If
         Next z
-        PropBag.WriteProperty "Item(" & I & ").ControlCount", c, 0
+        PropBag.WriteProperty "Item(" & i & ").ControlCount", c, 0
     Next
   Call PropBag.WriteProperty("BackColor1", m_BackColor1)
   Call PropBag.WriteProperty("BackColor2", m_BackColor2)
@@ -1818,6 +1816,7 @@ End Property
 
 Public Property Let Enabled(ByVal New_Enabled As Boolean)
   m_Enabled = New_Enabled
+  UserControl.Enabled = m_Enabled
   PropertyChanged "Enabled"
 End Property
 
@@ -1869,18 +1868,18 @@ Public Property Get ItemCount() As Long
 End Property
 
 Public Property Let ItemCount(ByVal nV As Long)
-Dim I As Long
+Dim i As Long
 If nV > m_TabCount Then
-    For I = m_TabCount + 1 To nV
-        AddTab , "Tab " & (I)
+    For i = m_TabCount + 1 To nV
+        AddTab , "Tab " & (i)
     Next
     Refresh
 Else
     If nV > 0 Then
         Dim T As Long
             T = m_TabCount - 1
-        For I = T To nV Step -1
-            RemoveTab I
+        For i = T To nV Step -1
+            RemoveTab i
         Next
     End If
 End If
@@ -2040,19 +2039,19 @@ If OleTranslateColor(Color, hpal, WinColor) <> 0 Then WinColor = -1
 End Function
 
 Private Function GetWindowsDPI() As Double
-    Dim hDC As Long, LPX  As Double
+    Dim hDC As Long, lPx  As Double
     hDC = GetDC(0)
-    LPX = CDbl(GetDeviceCaps(hDC, LOGPIXELSX))
+    lPx = CDbl(GetDeviceCaps(hDC, LOGPIXELSX))
     ReleaseDC 0, hDC
 
-    If (LPX = 0) Then
+    If (lPx = 0) Then
         GetWindowsDPI = 1#
     Else
-        GetWindowsDPI = LPX / 96#
+        GetWindowsDPI = lPx / 96#
     End If
 End Function
 
-Private Function fRoundCut(ByVal hGraphics As Long, RECT As RECTL, ByVal Color1 As Long, ByVal Color2 As Long, _
+Private Function fRoundCut(ByVal hGraphics As Long, RECT As RECTL, ByVal color1 As Long, ByVal color2 As Long, _
                            ByVal Angulo As Single, ByVal BorderWidth As Long, ByVal BorderColor As Long, _
                            ByVal Round As Long, SideCut As eFlatSide) As Long  '(ByVal hGraphics As Long, Rect As RECTL, ByVal Color1 As Long, ByVal Color2 As Long, ByVal BorderWidth As Long, ByVal BorderColor As Long, Round As Long, Side As sFlatSide) As Long
     Dim hPen As Long
@@ -2065,7 +2064,7 @@ Private Function fRoundCut(ByVal hGraphics As Long, RECT As RECTL, ByVal Color1 
     If BorderWidth <> 0 Then
       GdipCreatePen1 BorderColor, BorderWidth * nScale, &H2, hPen
     End If
-    GdipCreateLineBrushFromRectWithAngleI RECT, Color1, Color2, Angulo + 90, 0, WrapModeTileFlipXY, hBrush
+    GdipCreateLineBrushFromRectWithAngleI RECT, color1, color2, Angulo + 90, 0, WrapModeTileFlipXY, hBrush
     GdipCreatePath &H0, mPath   '&H0
     
     With RECT
@@ -2104,7 +2103,7 @@ Private Function fRoundCut(ByVal hGraphics As Long, RECT As RECTL, ByVal Color1 
     fRoundCut = mPath
 End Function
 
-Private Function fRoundRect(ByVal hGraphics As Long, RECT As RECTL, ByVal Color1 As Long, ByVal Color2 As Long, _
+Private Function fRoundRect(ByVal hGraphics As Long, RECT As RECTL, ByVal color1 As Long, ByVal color2 As Long, _
                             ByVal Angulo As Single, ByVal BorderWidth As Long, ByVal BorderColor As Long, _
                             ByVal Round As Long) As Long
     Dim hPen As Long
@@ -2114,7 +2113,7 @@ Private Function fRoundRect(ByVal hGraphics As Long, RECT As RECTL, ByVal Color1
     If BorderWidth <> 0 Then
       GdipCreatePen1 BorderColor, BorderWidth * nScale, &H2, hPen  '&H1 * nScale, &H2, hPen
     End If
-    GdipCreateLineBrushFromRectWithAngleI RECT, Color1, Color2, Angulo + 90, 0, WrapModeTileFlipXY, hBrush
+    GdipCreateLineBrushFromRectWithAngleI RECT, color1, color2, Angulo + 90, 0, WrapModeTileFlipXY, hBrush
     GdipCreatePath &H0, mPath   '&H0
     
     With RECT
@@ -2173,11 +2172,11 @@ Private Function AColor(ByVal RGBColor As Long, ByVal Opacity As Long) As Long
   End If
 End Function
 
-Public Function DrawLine(ByVal hGraphics As Long, ByVal X1 As Long, ByVal Y1 As Long, ByVal X2 As Long, ByVal Y2 As Long, Optional ByVal oColor As OLE_COLOR = vbWhite, Optional ByVal Opacity As Integer = 100, Optional ByVal PenWidth As Integer = 1) As Boolean
+Public Function DrawLine(ByVal hGraphics As Long, ByVal X1 As Long, ByVal y1 As Long, ByVal x2 As Long, ByVal y2 As Long, Optional ByVal oColor As OLE_COLOR = vbWhite, Optional ByVal Opacity As Integer = 100, Optional ByVal PenWidth As Integer = 1) As Boolean
     Dim hPen As Long
     
     GdipCreatePen1 AColor(oColor, Opacity), PenWidth * nScale, UnitPixel, hPen
-    DrawLine = GdipDrawLineI(hGraphics, hPen, X1 * nScale, Y1 * nScale, X2 * nScale, Y2 * nScale) = 0
+    DrawLine = GdipDrawLineI(hGraphics, hPen, X1 * nScale, y1 * nScale, x2 * nScale, y2 * nScale) = 0
     GdipDeletePen hPen
 End Function
 

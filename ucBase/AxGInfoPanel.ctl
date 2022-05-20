@@ -36,50 +36,49 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 '-UC-VB6-----------------------------
 'UC Name  : AxGInfoPanel
-'Version  : 1.09
+'Version  : 2.07.6
 'Editor   : David Rojas [AxioUK]
-'Date     : 27/06/2021
-'Description : Graphic Panel/Container to complement LabelPlus styles
+'Date     : 19/05/2022
 '------------------------------------
 Option Explicit
 
 Private Declare Function MulDiv Lib "kernel32.dll" (ByVal nNumber As Long, ByVal nNumerator As Long, ByVal nDenominator As Long) As Long
 Private Declare Function TlsGetValue Lib "kernel32.dll" (ByVal dwTlsIndex As Long) As Long
 Private Declare Function DeleteObject Lib "gdi32" (ByVal hObject As Long) As Long
-Private Declare Function SelectObject Lib "gdi32" (ByVal hdc As Long, ByVal hObject As Long) As Long
+Private Declare Function SelectObject Lib "gdi32" (ByVal hDC As Long, ByVal hObject As Long) As Long
 '-
 Private Declare Sub CopyMemory Lib "kernel32.dll" Alias "RtlMoveMemory" (ByRef Destination As Any, ByRef Source As Any, ByVal Length As Long)
 Private Declare Function GetSysColor Lib "user32.dll" (ByVal nIndex As Long) As Long
-Private Declare Function GetDC Lib "user32.dll" (ByVal hwnd As Long) As Long
-Private Declare Function GetDeviceCaps Lib "gdi32" (ByVal hdc As Long, ByVal nIndex As Long) As Long
-Private Declare Function ReleaseDC Lib "user32.dll" (ByVal hwnd As Long, ByVal hdc As Long) As Long
+Private Declare Function GetDC Lib "user32.dll" (ByVal hWnd As Long) As Long
+Private Declare Function GetDeviceCaps Lib "gdi32" (ByVal hDC As Long, ByVal nIndex As Long) As Long
+Private Declare Function ReleaseDC Lib "user32.dll" (ByVal hWnd As Long, ByVal hDC As Long) As Long
 
-Private Declare Function ReleaseCapture Lib "User32" () As Long
-Private Declare Function SendMessage Lib "user32.dll" Alias "SendMessageA" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, ByRef lParam As Any) As Long
+Private Declare Function ReleaseCapture Lib "user32" () As Long
+Private Declare Function SendMessage Lib "user32.dll" Alias "SendMessageA" (ByVal hWnd As Long, ByVal wMsg As Long, ByVal wParam As Long, ByRef lParam As Any) As Long
 
-Private Declare Function LoadCursor Lib "User32" Alias "LoadCursorA" (ByVal hInstance As Long, ByVal lpCursorName As Long) As Long
-Private Declare Function DestroyCursor Lib "User32" (ByVal hCursor As Long) As Long
+Private Declare Function LoadCursor Lib "user32" Alias "LoadCursorA" (ByVal hInstance As Long, ByVal lpCursorName As Long) As Long
+Private Declare Function DestroyCursor Lib "user32" (ByVal hCursor As Long) As Long
 Private Declare Function OleCreatePictureIndirect Lib "olepro32.dll" (PicDesc As PicBmp, RefIID As Any, ByVal fPictureOwnsHandle As Long, IPic As IPicture) As Long
 
-Private Declare Function GdiplusStartup Lib "GdiPlus.dll" (Token As Long, inputbuf As GDIPlusStartupInput, Optional ByVal outputbuf As Long = 0) As Long
-Private Declare Sub GdiplusShutdown Lib "GdiPlus.dll" (ByVal Token As Long)
+Private Declare Function GdiplusStartup Lib "GdiPlus.dll" (token As Long, inputbuf As GdiplusStartupInput, Optional ByVal outputbuf As Long = 0) As Long
+Private Declare Sub GdiplusShutdown Lib "GdiPlus.dll" (ByVal token As Long)
 Private Declare Function GdipCreateLineBrushFromRectWithAngleI Lib "GdiPlus.dll" (ByRef mRect As RECTL, ByVal mColor1 As Long, ByVal mColor2 As Long, ByVal mAngle As Single, ByVal mIsAngleScalable As Long, ByVal mWrapMode As Long, ByRef mLineGradient As Long) As Long
 Private Declare Function GdipDrawRectangleI Lib "GdiPlus.dll" (ByVal graphics As Long, ByVal pen As Long, ByVal X As Long, ByVal Y As Long, ByVal nWidth As Long, ByVal nHeight As Long) As Long
 Private Declare Function GdipCreateFromHDC Lib "GdiPlus.dll" (ByVal mhDC As Long, ByRef mGraphics As Long) As Long
 Private Declare Function GdipCreatePen1 Lib "GdiPlus.dll" (ByVal mColor As Long, ByVal mWidth As Single, ByVal mUnit As Long, ByRef mPen As Long) As Long
 Private Declare Function GdipDeleteGraphics Lib "GdiPlus.dll" (ByVal mGraphics As Long) As Long
-Private Declare Function GdipDeleteBrush Lib "GdiPlus.dll" (ByVal Brush As Long) As Long
+Private Declare Function GdipDeleteBrush Lib "GdiPlus.dll" (ByVal brush As Long) As Long
 Private Declare Function GdipDeletePen Lib "GdiPlus.dll" (ByVal mPen As Long) As Long
-Private Declare Function GdipCreatePath Lib "GdiPlus.dll" (ByRef mBrushMode As Long, ByRef mPath As Long) As Long
-Private Declare Function GdipAddPathLineI Lib "GdiPlus.dll" (ByVal mPath As Long, ByVal mX1 As Long, ByVal mY1 As Long, ByVal mX2 As Long, ByVal mY2 As Long) As Long
-Private Declare Function GdipAddPathArcI Lib "GdiPlus.dll" (ByVal mPath As Long, ByVal mX As Long, ByVal mY As Long, ByVal mWidth As Long, ByVal mHeight As Long, ByVal mStartAngle As Single, ByVal mSweepAngle As Single) As Long
-Private Declare Function GdipClosePathFigures Lib "GdiPlus.dll" (ByVal mPath As Long) As Long
-Private Declare Function GdipDeletePath Lib "GdiPlus.dll" (ByVal mPath As Long) As Long
-Private Declare Function GdipDrawPath Lib "GdiPlus.dll" (ByVal mGraphics As Long, ByVal mPen As Long, ByVal mPath As Long) As Long
-Private Declare Function GdipFillPath Lib "GdiPlus.dll" (ByVal mGraphics As Long, ByVal mBrush As Long, ByVal mPath As Long) As Long
+Private Declare Function GdipCreatePath Lib "GdiPlus.dll" (ByRef mBrushMode As Long, ByRef mpath As Long) As Long
+Private Declare Function GdipAddPathLineI Lib "GdiPlus.dll" (ByVal mpath As Long, ByVal mX1 As Long, ByVal mY1 As Long, ByVal mX2 As Long, ByVal mY2 As Long) As Long
+Private Declare Function GdipAddPathArcI Lib "GdiPlus.dll" (ByVal mpath As Long, ByVal mX As Long, ByVal mY As Long, ByVal mWidth As Long, ByVal mHeight As Long, ByVal mStartAngle As Single, ByVal mSweepAngle As Single) As Long
+Private Declare Function GdipClosePathFigures Lib "GdiPlus.dll" (ByVal mpath As Long) As Long
+Private Declare Function GdipDeletePath Lib "GdiPlus.dll" (ByVal mpath As Long) As Long
+Private Declare Function GdipDrawPath Lib "GdiPlus.dll" (ByVal mGraphics As Long, ByVal mPen As Long, ByVal mpath As Long) As Long
+Private Declare Function GdipFillPath Lib "GdiPlus.dll" (ByVal mGraphics As Long, ByVal mBrush As Long, ByVal mpath As Long) As Long
 Private Declare Function GdipSetSmoothingMode Lib "GdiPlus.dll" (ByVal graphics As Long, ByVal SmoothingMd As Long) As Long
-Private Declare Function GdipCreateSolidFill Lib "gdiplus" (ByVal ARGB As Long, ByRef Brush As Long) As Long
-Private Declare Function GdipAddPathString Lib "GdiPlus.dll" (ByVal mPath As Long, ByVal mString As Long, ByVal mLength As Long, ByVal mFamily As Long, ByVal mStyle As Long, ByVal mEmSize As Single, ByRef mLayoutRect As RECTS, ByVal mFormat As Long) As Long
+Private Declare Function GdipCreateSolidFill Lib "gdiplus" (ByVal argb As Long, ByRef brush As Long) As Long
+Private Declare Function GdipAddPathString Lib "GdiPlus.dll" (ByVal mpath As Long, ByVal mString As Long, ByVal mLength As Long, ByVal mFamily As Long, ByVal mStyle As Long, ByVal mEmSize As Single, ByRef mLayoutRect As RECTS, ByVal mFormat As Long) As Long
 Private Declare Function GdipMeasureString Lib "GdiPlus.dll" (ByVal mGraphics As Long, ByVal mString As Long, ByVal mLength As Long, ByVal mFont As Long, ByRef mLayoutRect As RECTS, ByVal mStringFormat As Long, ByRef mBoundingBox As RECTS, ByRef mCodepointsFitted As Long, ByRef mLinesFilled As Long) As Long
 Private Declare Function GdipCreateFont Lib "GdiPlus.dll" (ByVal mFontFamily As Long, ByVal mEmSize As Single, ByVal mStyle As Long, ByVal mUnit As Long, ByRef mFont As Long) As Long
 Private Declare Function GdipDeleteFont Lib "GdiPlus.dll" (ByVal mFont As Long) As Long
@@ -95,16 +94,16 @@ Private Declare Function GdipSetStringFormatLineAlign Lib "GdiPlus.dll" (ByVal m
 Private Declare Function GdipDeleteStringFormat Lib "GdiPlus.dll" (ByVal mFormat As Long) As Long
 Private Declare Function GdipDrawLineI Lib "GdiPlus.dll" (ByVal mGraphics As Long, ByVal mPen As Long, ByVal mX1 As Long, ByVal mY1 As Long, ByVal mX2 As Long, ByVal mY2 As Long) As Long
 Private Declare Function GdipDrawPolygonI Lib "gdiplus" (ByVal graphics As Long, ByVal pen As Long, ByRef pPoints As Any, ByVal count As Long) As Long
-Private Declare Function GdipFillPolygonI Lib "gdiplus" (ByVal graphics As Long, ByVal Brush As Long, ByRef pPoints As Any, ByVal count As Long, ByVal FillMode As Long) As Long
+Private Declare Function GdipFillPolygonI Lib "gdiplus" (ByVal graphics As Long, ByVal brush As Long, ByRef pPoints As Any, ByVal count As Long, ByVal FillMode As Long) As Long
 Private Declare Function GdipTranslateWorldTransform Lib "gdiplus" (ByVal graphics As Long, ByVal dX As Single, ByVal dY As Single, ByVal Order As Long) As Long
 Private Declare Function GdipRotateWorldTransform Lib "gdiplus" (ByVal graphics As Long, ByVal Angle As Single, ByVal Order As Long) As Long
 Private Declare Function GdipResetWorldTransform Lib "GdiPlus.dll" (ByVal graphics As Long) As Long
 
-Private Declare Function DrawTextW Lib "user32.dll" (ByVal hdc As Long, lpStr As Long, ByVal nCount As Long, ByRef lpRect As RECT, ByVal wFormat As Long) As Long
+Private Declare Function DrawTextW Lib "user32.dll" (ByVal hDC As Long, lpStr As Long, ByVal nCount As Long, ByRef lpRect As Rect, ByVal wFormat As Long) As Long
 Private Declare Function GetCursorPos Lib "user32.dll" (ByRef lpPoint As POINTL) As Long
 Private Declare Function WindowFromPoint Lib "user32.dll" (ByVal xPoint As Long, ByVal yPoint As Long) As Long
 
-Private Type RECT
+Private Type Rect
   Left As Long
   Top As Long
   Right As Long
@@ -124,8 +123,8 @@ Private Const LF_FACESIZE = 32
 Private Const SYSTEM_FONT = 13
 Private Const OBJ_FONT As Long = 6&
 
-Private Type GDIPlusStartupInput
-    GdiPlusVersion           As Long
+Private Type GdiplusStartupInput
+    GdiplusVersion           As Long
     DebugEventCallback       As Long
     SuppressBackgroundThread As Long
     SuppressExternalCodecs   As Long
@@ -160,7 +159,7 @@ Private Type PicBmp
   Size As Long
   type As Long
   hBmp As Long
-  hpal As Long
+  hPal As Long
   Reserved As Long
 End Type
 
@@ -210,7 +209,7 @@ Const m_def_Color2 = &H6A5444
 Const m_def_Angulo = 0
 
 'Property Variables:
-Dim GdipToken As Long
+Dim gdipToken As Long
 Dim nScale    As Single
 Dim hCur      As Long
 Dim hFontCollection As Long
@@ -297,7 +296,7 @@ Private m_StringPosY  As Long
 Private m_EffectFade  As FadeEffect
 Private m_InitialOpacity As Long
 
-Public Function AddString(ByVal hdc As Long, sString As String, X As Long, Y As Long, Width As Long, Height As Long, mAngle As Single, oFont As StdFont, ForeColor As OLE_COLOR, ColorOpacity As Integer, HAlign As eTextAlignH, VAlign As eTextAlignV, bWordWrap As Boolean) As Long
+Public Function AddString(ByVal hDC As Long, sString As String, X As Long, Y As Long, Width As Long, Height As Long, mAngle As Single, oFont As StdFont, ForeColor As OLE_COLOR, ColorOpacity As Integer, HAlign As eTextAlignH, VAlign As eTextAlignV, bWordWrap As Boolean) As Long
     Dim hBrush As Long
     Dim hFontFamily As Long
     Dim hFormat As Long
@@ -307,7 +306,7 @@ Public Function AddString(ByVal hdc As Long, sString As String, X As Long, Y As 
     Dim hFont As Long
     Dim hGraphics As Long
     
-    GdipCreateFromHDC hdc, hGraphics
+    GdipCreateFromHDC hDC, hGraphics
   
     If GdipCreateFontFamilyFromName(StrPtr(oFont.Name), 0, hFontFamily) Then
         If GdipGetGenericFontFamilySansSerif(hFontFamily) Then Exit Function
@@ -324,12 +323,12 @@ Public Function AddString(ByVal hdc As Long, sString As String, X As Long, Y As 
     If oFont.Underline Then lFontStyle = lFontStyle Or FontStyleUnderline
     If oFont.Strikethrough Then lFontStyle = lFontStyle Or FontStyleStrikeout
         
-    lFontSize = MulDiv(oFont.Size, GetDeviceCaps(hdc, LOGPIXELSY), 72)
+    lFontSize = MulDiv(oFont.Size, GetDeviceCaps(hDC, LOGPIXELSY), 72)
 
     layoutRect.Left = X * nScale: layoutRect.Top = Y * nScale
     layoutRect.Width = Width * nScale: layoutRect.Height = Height * nScale
 
-    GdipCreateSolidFill ARGB(ForeColor, ColorOpacity), hBrush
+    GdipCreateSolidFill argb(ForeColor, ColorOpacity), hBrush
             
     Call GdipCreateFont(hFontFamily, lFontSize, lFontStyle, UnitPixel, hFont)
     
@@ -380,11 +379,11 @@ On Error GoTo Err
 Err:
 End Sub
 
-Public Function DrawLine(ByVal hGraphics As Long, ByVal X1 As Long, ByVal Y1 As Long, ByVal X2 As Long, ByVal Y2 As Long, Optional ByVal oColor As OLE_COLOR = vbBlack, Optional ByVal Opacity As Integer = 90, Optional ByVal PenWidth As Integer = 1) As Boolean
+Public Function DrawLine(ByVal hGraphics As Long, ByVal X1 As Long, ByVal y1 As Long, ByVal x2 As Long, ByVal y2 As Long, Optional ByVal oColor As OLE_COLOR = vbBlack, Optional ByVal Opacity As Integer = 90, Optional ByVal PenWidth As Integer = 1) As Boolean
     Dim hPen As Long
     
-    GdipCreatePen1 ARGB(oColor, Opacity), PenWidth * nScale, UnitPixel, hPen
-    DrawLine = GdipDrawLineI(hGraphics, hPen, X1 * nScale, Y1 * nScale, X2 * nScale, Y2 * nScale) = 0
+    GdipCreatePen1 argb(oColor, Opacity), PenWidth * nScale, UnitPixel, hPen
+    DrawLine = GdipDrawLineI(hGraphics, hPen, X1 * nScale, y1 * nScale, x2 * nScale, y2 * nScale) = 0
     GdipDeletePen hPen
 
 End Function
@@ -397,7 +396,7 @@ Public Sub Refresh()
 End Sub
 
 Private Function AddIconChar(CharCode As Long, Pad_X, Pad_Y, ForeColor As OLE_COLOR, ActiveColor As OLE_COLOR)
-Dim Rct As RECT
+Dim Rct As Rect
 Dim pFont       As IFont
 Dim lFontOld    As Long
     
@@ -405,7 +404,7 @@ On Error GoTo ErrF
 With UserControl
   .AutoRedraw = True
   Set pFont = IconFont
-  lFontOld = SelectObject(.hdc, pFont.hFont)
+  lFontOld = SelectObject(.hDC, pFont.hFont)
 
   If m_MouseOver Then
     .ForeColor = ActiveColor
@@ -418,24 +417,24 @@ With UserControl
   Rct.Right = UserControl.ScaleWidth
   Rct.Bottom = UserControl.ScaleHeight
   
-  DrawTextW .hdc, CharCode, 1, Rct, 0
-  Call SelectObject(.hdc, lFontOld)
+  DrawTextW .hDC, CharCode, 1, Rct, 0
+  Call SelectObject(.hDC, lFontOld)
   
 ErrF:
   Set pFont = Nothing
 End With
 End Function
 
-Private Function ARGB(ByVal RGBColor As Long, ByVal Opacity As Long) As Long
+Private Function argb(ByVal RGBColor As Long, ByVal Opacity As Long) As Long
   If (RGBColor And &H80000000) Then RGBColor = GetSysColor(RGBColor And &HFF&)
-  ARGB = (RGBColor And &HFF00&) Or (RGBColor And &HFF0000) \ &H10000 Or (RGBColor And &HFF) * &H10000
+  argb = (RGBColor And &HFF00&) Or (RGBColor And &HFF0000) \ &H10000 Or (RGBColor And &HFF) * &H10000
   Opacity = CByte((Abs(Opacity) / 100) * 255)
   If Opacity < 128 Then
       If Opacity < 0& Then Opacity = 0&
-      ARGB = ARGB Or Opacity * &H1000000
+      argb = argb Or Opacity * &H1000000
   Else
       If Opacity > 255& Then Opacity = 255&
-      ARGB = ARGB Or (Opacity - 128&) * &H1000000 Or &H80000000
+      argb = argb Or (Opacity - 128&) * &H1000000 Or &H80000000
   End If
 End Function
 
@@ -464,19 +463,19 @@ End With
   SafeRange m_Opacity, 0, 100
 
 With UserControl
-  GdipCreateFromHDC .hdc, hGraphics
+  GdipCreateFromHDC .hDC, hGraphics
   GdipSetSmoothingMode hGraphics, SmoothingModeHighQuality  'SmoothingModeAntiAlias
 
   If m_OnFocus Then
-    gRoundRect hGraphics, REC, ARGB(m_Color1, 100), ARGB(m_Color2, 100), m_Angulo, ARGB(m_BorderColorOnFocus, 100), m_CornerCurve
+    gRoundRect hGraphics, REC, argb(m_Color1, 100), argb(m_Color2, 100), m_Angulo, argb(m_BorderColorOnFocus, 100), m_CornerCurve
   Else
     Select Case m_EffectFade
       Case BorderAndControls, BorderOnly
-        gRoundRect hGraphics, REC, ARGB(m_Color1, 100), ARGB(m_Color2, 100), m_Angulo, ARGB(m_BorderColor, m_Opacity), m_CornerCurve
+        gRoundRect hGraphics, REC, argb(m_Color1, 100), argb(m_Color2, 100), m_Angulo, argb(m_BorderColor, m_Opacity), m_CornerCurve
       Case AllPanel
-        gRoundRect hGraphics, REC, ARGB(m_Color1, m_Opacity), ARGB(m_Color2, m_Opacity), m_Angulo, ARGB(m_BorderColor, m_Opacity), m_CornerCurve
+        gRoundRect hGraphics, REC, argb(m_Color1, m_Opacity), argb(m_Color2, m_Opacity), m_Angulo, argb(m_BorderColor, m_Opacity), m_CornerCurve
       Case Else
-        gRoundRect hGraphics, REC, ARGB(m_Color1, 100), ARGB(m_Color2, 100), m_Angulo, ARGB(m_BorderColor, 100), m_CornerCurve
+        gRoundRect hGraphics, REC, argb(m_Color1, 100), argb(m_Color2, 100), m_Angulo, argb(m_BorderColor, 100), m_CornerCurve
     End Select
   End If
   
@@ -560,11 +559,11 @@ With UserControl
   '---------------
   Select Case m_EffectFade
     Case ControlsOnly, BorderAndControls, AllPanel
-        GdipCreateSolidFill ARGB(m_BorderColor, m_Opacity), hBrush
-        GdipCreatePen1 ARGB(m_BorderColor, m_Opacity), 1, UnitPixel, hPen
+        GdipCreateSolidFill argb(m_BorderColor, m_Opacity), hBrush
+        GdipCreatePen1 argb(m_BorderColor, m_Opacity), 1, UnitPixel, hPen
     Case Else
-        GdipCreateSolidFill ARGB(m_BorderColor, 100), hBrush
-        GdipCreatePen1 ARGB(m_BorderColor, 100), 1, UnitPixel, hPen
+        GdipCreateSolidFill argb(m_BorderColor, 100), hBrush
+        GdipCreatePen1 argb(m_BorderColor, 100), 1, UnitPixel, hPen
   End Select
       
   If m_CrossVisible Then DrawCross hGraphics
@@ -632,7 +631,7 @@ Private Function DrawCaption(ByVal hGraphics As Long, sString As String, layoutR
         GdipAddPathString hPath, StrPtr(sString), -1, hFontFamily, lFontStyle, lFontSize, layoutRect, hFormat
         GdipDeleteStringFormat hFormat
 
-        GdipCreateSolidFill ARGB(TextColor, ColorOpacity), hBrush
+        GdipCreateSolidFill argb(TextColor, ColorOpacity), hBrush
 
         GdipFillPath hGraphics, hBrush, hPath
         GdipDeleteBrush hBrush
@@ -789,16 +788,16 @@ End Sub
 
 Private Function GetFontStyleAndSize(oFont As StdFont, lFontStyle As Long, lFontSize As Long)
 On Error GoTo ErrO
-    Dim hdc As Long
+    Dim hDC As Long
     lFontStyle = 0
     If oFont.Bold Then lFontStyle = lFontStyle Or FontStyleBold
     If oFont.Italic Then lFontStyle = lFontStyle Or FontStyleItalic
     If oFont.Underline Then lFontStyle = lFontStyle Or FontStyleUnderline
     If oFont.Strikethrough Then lFontStyle = lFontStyle Or FontStyleStrikeout
     
-    hdc = GetDC(0&)
-    lFontSize = MulDiv(oFont.Size, GetDeviceCaps(hdc, LOGPIXELSY), 72)
-    ReleaseDC 0&, hdc
+    hDC = GetDC(0&)
+    lFontSize = MulDiv(oFont.Size, GetDeviceCaps(hDC, LOGPIXELSY), 72)
+    ReleaseDC 0&, hDC
 ErrO:
 End Function
 
@@ -828,7 +827,7 @@ Private Function GetSystemHandCursor() As Picture
     .Size = Len(Pic)
     .type = vbPicTypeIcon
     .hBmp = hCur
-    .hpal = 0
+    .hPal = 0
   End With
   
   Call OleCreatePictureIndirect(Pic, GUID(0), 1, IPic)
@@ -837,32 +836,32 @@ Private Function GetSystemHandCursor() As Picture
 End Function
 
 Private Function GetWindowsDPI() As Double
-    Dim hdc As Long, LPX  As Double, LPY As Double
-    hdc = GetDC(0)
-    LPX = CDbl(GetDeviceCaps(hdc, LOGPIXELSX))
-    LPY = CDbl(GetDeviceCaps(hdc, LOGPIXELSY))
-    ReleaseDC 0, hdc
+    Dim hDC As Long, lPx  As Double, LPY As Double
+    hDC = GetDC(0)
+    lPx = CDbl(GetDeviceCaps(hDC, LOGPIXELSX))
+    LPY = CDbl(GetDeviceCaps(hDC, LOGPIXELSY))
+    ReleaseDC 0, hDC
 
-    If (LPX = 0) Then
+    If (lPx = 0) Then
         GetWindowsDPI = 1#
     Else
-        GetWindowsDPI = LPX / 96#
+        GetWindowsDPI = lPx / 96#
     End If
 End Function
 
-Private Function gRoundRect(ByVal hGraphics As Long, RECT As RECTL, ByVal Color1 As Long, ByVal Color2 As Long, ByVal Angulo As Single, ByVal BorderColor As Long, Round As Long) As Long
+Private Function gRoundRect(ByVal hGraphics As Long, Rect As RECTL, ByVal color1 As Long, ByVal color2 As Long, ByVal Angulo As Single, ByVal BorderColor As Long, Round As Long) As Long
     Dim hPen As Long
     Dim hBrush As Long
-    Dim mPath As Long
+    Dim mpath As Long
     Dim mRound As Long
     
     If m_BorderWidth <> 0 Then
       GdipCreatePen1 BorderColor, m_BorderWidth * nScale, &H2, hPen  '&H1 * nScale, &H2, hPen
     End If
-    GdipCreateLineBrushFromRectWithAngleI RECT, Color1, Color2, Angulo + 90, 0, WrapModeTileFlipXY, hBrush
-    GdipCreatePath &H0, mPath   '&H0
+    GdipCreateLineBrushFromRectWithAngleI Rect, color1, color2, Angulo + 90, 0, WrapModeTileFlipXY, hBrush
+    GdipCreatePath &H0, mpath   '&H0
     
-    With RECT
+    With Rect
         mRound = GetSafeRound((Round * nScale), .Width, .Height)
         If mRound = 0 Then mRound = 1
         '    GdipDrawRectangleI hGraphics, hPen, .Left, .Top, .Width, .Height
@@ -871,35 +870,35 @@ Private Function gRoundRect(ByVal hGraphics As Long, RECT As RECTL, ByVal Color1
         '    GdipAddPathLineI mPath, .Width, .Height, .Left, .Height 'Line-Bottom
         '    GdipAddPathLineI mPath, .Left, .Height, .Left, .Top     'Line-Right
         'Else
-            GdipAddPathArcI mPath, .Left, .Top, mRound, mRound, 180, 90
-            GdipAddPathArcI mPath, (.Left + .Width) - mRound, .Top, mRound, mRound, 270, 90
-            GdipAddPathArcI mPath, (.Left + .Width) - mRound, (.Top + .Height) - mRound, mRound, mRound, 0, 90
-            GdipAddPathArcI mPath, .Left, (.Top + .Height) - mRound, mRound, mRound, 90, 90
+            GdipAddPathArcI mpath, .Left, .Top, mRound, mRound, 180, 90
+            GdipAddPathArcI mpath, (.Left + .Width) - mRound, .Top, mRound, mRound, 270, 90
+            GdipAddPathArcI mpath, (.Left + .Width) - mRound, (.Top + .Height) - mRound, mRound, mRound, 0, 90
+            GdipAddPathArcI mpath, .Left, (.Top + .Height) - mRound, mRound, mRound, 90, 90
         'End If
     End With
     
-    GdipClosePathFigures mPath
-    GdipFillPath hGraphics, hBrush, mPath
-    GdipDrawPath hGraphics, hPen, mPath
+    GdipClosePathFigures mpath
+    GdipFillPath hGraphics, hBrush, mpath
+    GdipDrawPath hGraphics, hPen, mpath
     
-    Call GdipDeletePath(mPath)
+    Call GdipDeletePath(mpath)
     Call GdipDeleteBrush(hBrush)
     Call GdipDeletePen(hPen)
 
-    gRoundRect = mPath
+    gRoundRect = mpath
 End Function
 
 'Inicia GDI+
 Private Sub InitGDI()
-    Dim GdipStartupInput As GDIPlusStartupInput
-    GdipStartupInput.GdiPlusVersion = 1&
-    Call GdiplusStartup(GdipToken, GdipStartupInput, ByVal 0)
+    Dim gdipStartupInput As GdiplusStartupInput
+    gdipStartupInput.GdiplusVersion = 1&
+    Call GdiplusStartup(gdipToken, gdipStartupInput, ByVal 0)
 End Sub
 
-Private Function IsMouseOver(hwnd As Long) As Boolean
+Private Function IsMouseOver(hWnd As Long) As Boolean
     Dim PT As POINTL
     GetCursorPos PT
-    IsMouseOver = (WindowFromPoint(PT.X, PT.Y) = hwnd)
+    IsMouseOver = (WindowFromPoint(PT.X, PT.Y) = hWnd)
 End Function
 
 Private Function MousePointerHands(ByVal NewValue As Boolean)
@@ -974,11 +973,11 @@ End Sub
 
 'Termina GDI+
 Private Sub TerminateGDI()
-    Call GdiplusShutdown(GdipToken)
+    Call GdiplusShutdown(gdipToken)
 End Sub
 
 Private Sub tmrEffect_Timer()
-If IsMouseOver(UserControl.hwnd) Then
+If IsMouseOver(UserControl.hWnd) Then
   If m_Opacity < 100 Then
     m_Opacity = m_Opacity + 2
     Refresh
@@ -1104,7 +1103,7 @@ If Button = vbLeftButton And m_Moveable = True Then
   Dim res As Long
   MousePointerHands True
   Call ReleaseCapture
-  res = SendMessage(UserControl.hwnd, WM_NCLBUTTONDOWN, HTCAPTION, 0&)
+  res = SendMessage(UserControl.hWnd, WM_NCLBUTTONDOWN, HTCAPTION, 0&)
   
   If Y > OldY Then m_Top = m_Top + Y
   If Y < OldY Then m_Top = m_Top - Y
@@ -1212,7 +1211,6 @@ With PropBag
 End With
   
   m_Opacity = m_InitialOpacity
-  UserControl.Enabled = m_Enabled
 
 End Sub
 
@@ -1626,15 +1624,16 @@ End Property
 
 Public Property Let Enabled(ByVal New_Enabled As Boolean)
   m_Enabled = New_Enabled
+  UserControl.Enabled = m_Enabled
   PropertyChanged "Enabled"
 End Property
 
-Public Property Get hdc() As Long
-    hdc = UserControl.hdc
+Public Property Get hDC() As Long
+    hDC = UserControl.hDC
 End Property
 
-Public Property Get hwnd() As Long
-    hwnd = UserControl.hwnd
+Public Property Get hWnd() As Long
+    hWnd = UserControl.hWnd
 End Property
 
 Public Property Get Icon1CharCode() As String
